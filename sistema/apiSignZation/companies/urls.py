@@ -1,8 +1,8 @@
 
 from django.urls import path
-from .views import CompanyListAPIView, CompanyDetailAPIView
+from .views import CreateCompanyAPIView, ReadUpdateDeleteCompanyAPIView
 
 urlpatterns = [
-    path('', CompanyListAPIView.as_view(), name='company_list'),
-    path('<int:pk>/', CompanyDetailAPIView.as_view(), name='company_detail'),
+    path('', CreateCompanyAPIView.as_view(), name='company_list'),
+    path('<int:user_id>/', ReadUpdateDeleteCompanyAPIView.as_view(), name='company_detail'),
 ]

@@ -1,8 +1,8 @@
 
 from django.urls import path
-from .views import DocumentListCreateAPIView, DocumentRetrieveUpdateDestroyAPIView
+from .views import CreateDocumentAPIView, ReadUpdateDeleteDocumentAPIView
 
 urlpatterns = [
-    path('documents/', DocumentListCreateAPIView.as_view(), name='document_list_create'),
-    path('documents/<int:pk>/', DocumentRetrieveUpdateDestroyAPIView.as_view(), name='document_detail'),
+    path('', CreateDocumentAPIView.as_view(), name='user_list_create'),
+    path('<int:user_id>/', ReadUpdateDeleteDocumentAPIView.as_view(), name='user_detail'),
 ]
