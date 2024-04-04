@@ -2,8 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Company
-from users.models import User
-from users.serializers import UserSerializer
 from .serializers import CompanySerializer
 
 class CreateCompanyAPIView(APIView):
