@@ -1,0 +1,56 @@
+<div>
+  @if (submitted) { 
+    @if (isSucess) {
+  <div class="alert alert-success" role="alert">
+    {{ message }}
+  </div>
+  } @else {
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  } }
+
+  <div class="submit-form">
+    <div class="form-group">
+      <label for="title">Nome*</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="document.name"
+        name="title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="title">Data limite pra assinatura*</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="document.date_limit_to_sign"
+        name="title"
+      />
+    </div>
+
+    <div class="row">
+      <div class="col-10"></div>
+      @if (isUpdateRoute) {
+      <div class="col-1">
+        <button (click)="updateDocument()" class="btn btn-info">Ataulizar</button>
+      </div>
+      } @else {
+      <div class="col-1">
+        <button (click)="saveDocument(); newDocument()" class="btn btn-success">
+          Salvar
+        </button>
+      </div>
+      }
+      <div class="col-1">
+        <a href="document" class="btn btn-light"> Voltar </a>
+      </div>
+    </div>
+  </div>
+</div>

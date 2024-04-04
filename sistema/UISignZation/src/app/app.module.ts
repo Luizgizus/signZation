@@ -8,6 +8,8 @@ import { AddUpdateUserComponent } from './components/add-update-user/add-update-
 import { UserComponent } from './components/user/user.component';
 import { AddUpdateCompanyComponent } from './components/add-update-company/add-update-company.component';
 import { CompanyComponent } from './components/company/company.component';
+import { AddUpdateDocumentComponent } from './components/add-update-document/add-update-document.component';
+import { DocumentComponent } from './components/document/document.component';
 
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     AddUpdateUserComponent,
     UserComponent,
     AddUpdateCompanyComponent,
+    AddUpdateDocumentComponent,
+    DocumentComponent,
     CompanyComponent
   ],
   imports: [
