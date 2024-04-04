@@ -4,6 +4,24 @@ from rest_framework import status
 from .models import Document
 from .serializers import DocumentSerializer
 
+class SignDocumentAPIView(APIView):
+    def post(self, request, document_id):
+        try:
+            document = Document.objects.get(pk=document_id)   
+        except Document.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        if document.signed:
+            return Response({"Message": "Documento já assinado"},status=status.HTTP_400_BAD_REQUEST)
+        else: 
+            request.data['name'] = document.name
+            request.data['signed'] = True
+            serializer = DocumentSerializer(document, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class CreateDocumentAPIView(APIView):
     def post(self, request):
         try:

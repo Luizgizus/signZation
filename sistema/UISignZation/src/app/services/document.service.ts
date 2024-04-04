@@ -16,6 +16,10 @@ export class DocumentService {
     return this.http.get<Document[]>(`${baseUrl}/`);
   }
 
+  signDocument(id: any, data: any): Observable<Document> {
+    return this.http.post<Document>(`${baseUrl}/sign/${id}`, data);
+  }
+  
   getById(id: any,): Observable<Document> {
     return this.http.get<Document>(`${baseUrl}/${id}/`);
   }

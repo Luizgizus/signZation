@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Document } from '../../models/document.model';
+import { Company } from '../../models/company.model';
 import { DocumentService } from '../../services/document.service';
+import { CompanyService } from '../../services/company.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -15,9 +17,11 @@ export class AddUpdateDocumentComponent {
     last_updated_at: new Date(),
     date_limit_to_sign: '',
     signed: false,
-    company: 2,
+    company: 0,
     created_by: 1
   };
+
+  companies?: Company[];
 
   documentId: any = "";
   isUpdateRoute: boolean = false;
@@ -29,10 +33,13 @@ export class AddUpdateDocumentComponent {
 
   constructor(
     private documentService: DocumentService,
+    private companyService: CompanyService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.getAllCompanies()
+
     let path = this.route.snapshot.url.map((segment) => segment.path).join('/');
     this.isUpdateRoute = path.includes('document-update')
     if (this.isUpdateRoute) {
@@ -81,6 +88,15 @@ export class AddUpdateDocumentComponent {
         this.message = JSON.stringify(e.error)
         this.submitted = true;
       },
+    });
+  }
+
+  getAllCompanies(): void {
+    this.companyService.getAll().subscribe({
+      next: (res) => {
+        this.companies = res
+      },
+      error: (e) => console.error(e),
     });
   }
 
