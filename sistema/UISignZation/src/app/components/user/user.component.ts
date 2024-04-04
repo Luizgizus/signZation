@@ -30,11 +30,14 @@ export class UserComponent {
   }
 
   deleteUser(id:number): void {
-    this.userService.delete(id).subscribe({
-      next: (res) => {
-        this.getAllUsers()
-      },
-      error: (e) => console.error(e),
-    });
+    var response = confirm("Tem certeza que deseja excluir um usuario?")
+    if(response){
+      this.userService.delete(id).subscribe({
+        next: (res) => {
+          this.getAllUsers()
+        },
+        error: (e) => console.error(e),
+      });
+    }
   }
 }

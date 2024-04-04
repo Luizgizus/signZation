@@ -12,43 +12,55 @@
 
   <div class="submit-form">
     <div class="form-group">
-      <label for="title">Email</label>
+      <label for="title">Nome*</label>
       <input
         type="text"
         class="form-control"
         id="title"
         required
-        [(ngModel)]="user.email"
+        [(ngModel)]="company.name"
         name="title"
       />
     </div>
 
     <div class="form-group">
-      <label for="description">Senha</label>
+      <label for="title">Lingua</label>
       <input
+        type="text"
         class="form-control"
-        id="description"
+        id="title"
         required
-        [(ngModel)]="user.password"
-        name="description"
+        [(ngModel)]="company.lang"
+        name="title"
       />
     </div>
 
+    <div class="form-group">
+      <label for="title">Time Zone</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="company.locale"
+        name="title"
+      />
+    </div>
     <div class="row">
       <div class="col-10"></div>
       @if (isUpdateRoute) {
       <div class="col-1">
-        <button (click)="updateUser()" class="btn btn-info">Ataulizar</button>
+        <button (click)="updateCompany()" class="btn btn-info">Ataulizar</button>
       </div>
       } @else {
       <div class="col-1">
-        <button (click)="saveUser(); newuser()" class="btn btn-success">
+        <button (click)="saveCompany(); newCompany()" class="btn btn-success">
           Salvar
         </button>
       </div>
       }
       <div class="col-1">
-        <a href="user" class="btn btn-light"> Voltar </a>
+        <a href="company" class="btn btn-light"> Voltar </a>
       </div>
     </div>
   </div>

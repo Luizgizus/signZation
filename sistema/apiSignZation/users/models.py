@@ -12,6 +12,8 @@ class User(models.Model):
 
     def save(self, *args, **kwargs):
         self.last_updated_at = timezone.now()
+        if len(self.password) <= 5:
+            raise ValueError("A senha deve ter pelo menos 6 caracteres")
         super(User, self).save(*args, **kwargs)
 
     class Meta:

@@ -20,6 +20,9 @@ export class AddUpdateUserComponent {
   oldPassword: any = '';
 
   submitted = false;
+  isSucess = false;
+
+  message = ""
 
   constructor(
     private userService: UserService,
@@ -41,7 +44,11 @@ export class AddUpdateUserComponent {
         this.user.email = res.email;
         this.oldPassword = res.password;
       },
-      error: (e) => console.error(e),
+      error: (e) => {
+        this.isSucess = false
+        this.message = JSON.stringify(e.error)
+        this.submitted = true;
+      },
     });
   }
 
@@ -53,10 +60,16 @@ export class AddUpdateUserComponent {
 
     this.userService.create(data).subscribe({
       next: (res) => {
-        console.log(res);
+        this.submitted = true;
+        this.isSucess = true;
+        this.message = "Usuario criado com sucesso"
+      },
+      error: (e) => {
+        console.log(e)
+        this.isSucess = false
+        this.message = JSON.stringify(e.error)
         this.submitted = true;
       },
-      error: (e) => console.error(e),
     });
   }
 
@@ -68,10 +81,15 @@ export class AddUpdateUserComponent {
 
     this.userService.update(this.userId, data).subscribe({
       next: (res) => {
-        console.log(res);
+        this.submitted = true;
+        this.isSucess = true;
+        this.message = "Usuario atualizado com sucesso"
+      },
+      error: (e) => {
+        this.isSucess = false
+        this.message = JSON.stringify(e.error)
         this.submitted = true;
       },
-      error: (e) => console.error(e),
     });
   }
 

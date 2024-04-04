@@ -6,16 +6,24 @@ from .serializers import DocumentSerializer
 
 class CreateDocumentAPIView(APIView):
     def post(self, request):
-        serializer = DocumentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = DocumentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+  
     
     def get(self, request):
-        documents = Document.objects.all()
-        serializer = DocumentSerializer(documents, many=True)
-        return Response(serializer.data)
+        try:
+            documents = Document.objects.all()
+            serializer = DocumentSerializer(documents, many=True)
+            return Response(serializer.data)
+        except:
+            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+  
 
 class ReadUpdateDeleteDocumentAPIView(APIView):
     def get(self, request, document_id):
