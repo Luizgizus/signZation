@@ -22,8 +22,23 @@ const parseError = async (response: Response): Promise<string> => {
   }
 };
 
+const withAuth = (init?: RequestInit): RequestInit => {
+  const token = localStorage.getItem('signzation_token');
+  if (!token) {
+    return init ?? {};
+  }
+
+  return {
+    ...init,
+    headers: {
+      ...(init?.headers ?? {}),
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 export const requestJson = async <T>(input: RequestInfo, init?: RequestInit): Promise<T> => {
-  const response = await fetch(input, init);
+  const response = await fetch(input, withAuth(init));
   if (!response.ok) {
     throw new Error(await parseError(response));
   }
@@ -33,7 +48,7 @@ export const requestJson = async <T>(input: RequestInfo, init?: RequestInit): Pr
 };
 
 export const requestVoid = async (input: RequestInfo, init?: RequestInit): Promise<void> => {
-  const response = await fetch(input, init);
+  const response = await fetch(input, withAuth(init));
   if (!response.ok) {
     throw new Error(await parseError(response));
   }

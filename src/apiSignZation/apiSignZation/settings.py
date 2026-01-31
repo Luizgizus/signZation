@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'companies',
     'users',
     'documents',
-    'user_company',
 ]
 
 MIDDLEWARE = [
@@ -121,10 +120,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'users.authentication.SessionTokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://localhost:5173"
 ]
+
+SESSION_TTL_SECONDS = 60 * 60 * 3

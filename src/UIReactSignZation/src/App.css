@@ -115,6 +115,10 @@ h5 {
   text-decoration: none;
   font-weight: 500;
   transition: background 0.2s ease, transform 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
 }
 
 .nav-link:hover {
@@ -219,6 +223,32 @@ h5 {
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #e2e8f0, #f8fafc 45%, #ffffff);
+  padding: 24px;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 25px 55px rgba(15, 23, 42, 0.12);
+}
+
+.login-header h1 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+}
+
+.login-header p {
+  margin: 0 0 24px;
+  color: #64748b;
 }
 
 .empty-state {

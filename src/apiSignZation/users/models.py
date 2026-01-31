@@ -16,5 +16,10 @@ class User(models.Model):
             raise ValueError("A senha deve ter pelo menos 6 caracteres")
         super(User, self).save(*args, **kwargs)
 
+    @property
+    def is_authenticated(self):
+        # Para compatibilidade com DRF IsAuthenticated sem alterar o modelo base.
+        return True
+
     class Meta:
         verbose_name_plural = 'Users'

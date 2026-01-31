@@ -1,69 +1,99 @@
 import { useState } from 'react';
-import { BrowserRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import UserList from './pages/UserList';
 import UserForm from './pages/UserForm';
 import CompanyList from './pages/CompanyList';
 import CompanyForm from './pages/CompanyForm';
 import DocumentList from './pages/DocumentList';
 import DocumentForm from './pages/DocumentForm';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import { clearSession } from './auth';
 import './App.css';
 
-const App = () => {
+const AppShell = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
+  const isLoginRoute = location.pathname === '/login';
+  const navigate = useNavigate();
+
+  if (isLoginRoute) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
 
   return (
-    <BrowserRouter>
-      <div className={`app-shell ${isCollapsed ? 'is-collapsed' : ''}`}>
-        <aside className="sidebar">
-          <div className="sidebar-header">
-            <h1 className="brand">SignZation</h1>
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() => setIsCollapsed((prev) => !prev)}
-              aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
-            >
-              <i className={`bi ${isCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'}`}></i>
-            </button>
-          </div>
+    <div className={`app-shell ${isCollapsed ? 'is-collapsed' : ''}`}>
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <h1 className="brand">SignZation</h1>
+          <button
+            type="button"
+            className="sidebar-toggle"
+            onClick={() => setIsCollapsed((prev) => !prev)}
+            aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+          >
+            <i className={`bi ${isCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'}`}></i>
+          </button>
+        </div>
 
-          <div className="nav-section">
-            <span className="nav-label">Gestão</span>
-            <NavLink
-              to="/user"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              <i className="bi bi-person"></i>
-              <span className="nav-text">Usuarios</span>
-            </NavLink>
-            <NavLink
-              to="/company"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              <i className="bi bi-building"></i>
-              <span className="nav-text">Empresas</span>
-            </NavLink>
-            <NavLink
-              to="/document"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              <i className="bi bi-file-text"></i>
-              <span className="nav-text">Documentos</span>
-            </NavLink>
-          </div>
-        </aside>
+        <div className="nav-section">
+          <span className="nav-label">Gestão</span>
+          <NavLink
+            to="/user"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <i className="bi bi-person"></i>
+            <span className="nav-text">Usuarios</span>
+          </NavLink>
+          <NavLink
+            to="/company"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <i className="bi bi-building"></i>
+            <span className="nav-text">Empresas</span>
+          </NavLink>
+          <NavLink
+            to="/document"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <i className="bi bi-file-text"></i>
+            <span className="nav-text">Documentos</span>
+          </NavLink>
+        </div>
 
-        <button
-          type="button"
-          className="mobile-toggle"
-          onClick={() => setIsCollapsed((prev) => !prev)}
-          aria-label={isCollapsed ? 'Fechar menu' : 'Abrir menu'}
-        >
-          <i className={`bi ${isCollapsed ? 'bi-x-lg' : 'bi-list'}`}></i>
-        </button>
+        <div className="nav-section">
+          <span className="nav-label">Conta</span>
+          <button
+            type="button"
+            className="nav-link logout-button"
+            onClick={() => {
+              clearSession();
+              navigate('/login', { replace: true });
+            }}
+          >
+            <i className="bi bi-box-arrow-right"></i>
+            <span className="nav-text">Sair</span>
+          </button>
+        </div>
+      </aside>
 
-        <main className="main-content">
-          <Routes>
+      <button
+        type="button"
+        className="mobile-toggle"
+        onClick={() => setIsCollapsed((prev) => !prev)}
+        aria-label={isCollapsed ? 'Fechar menu' : 'Abrir menu'}
+      >
+        <i className={`bi ${isCollapsed ? 'bi-x-lg' : 'bi-list'}`}></i>
+      </button>
+
+      <main className="main-content">
+        <Routes>
+          <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Navigate to="/user" replace />} />
             <Route path="/user" element={<UserList />} />
             <Route path="/user-create" element={<UserForm />} />
@@ -74,11 +104,18 @@ const App = () => {
             <Route path="/document" element={<DocumentList />} />
             <Route path="/document-create" element={<DocumentForm />} />
             <Route path="/document-update/:id" element={<DocumentForm />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+          </Route>
+          <Route path="/login" element={<Navigate to="/company" replace />} />
+        </Routes>
+      </main>
+    </div>
   );
 };
+
+const App = () => (
+  <BrowserRouter>
+    <AppShell />
+  </BrowserRouter>
+);
 
 export default App;

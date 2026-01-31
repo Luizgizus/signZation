@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: ./src/apiSignZation
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/apiSignZation:/app
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  ui:
+    build:
+      context: ./src/UIReactSignZation
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
