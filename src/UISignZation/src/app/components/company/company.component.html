@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-11">
+        <h1 class="display-1">Empresas</h1>
+    </div>
+    <div class="col-1">
+        <a href="company-create" class="btn btn-outline-success">
+            <i class="bi bi-plus-lg"></i>
+        </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <thead>           
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Time Zone</th>
+            <th scope="col">Lingua</th>
+            <th scope="col">Data criação</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (company of companies; track company.id; let i = $index) {
+            <tr>
+              <th scope="row">{{i+1}}</th>
+              <td>{{company.name}}</td>
+              <td>{{company.lang}}</td>
+              <td>{{company.locale}}</td>
+              <td>{{company.created_at}}</td>
+              <td>
+                  <a href="company-update/{{company.id}}" type="button" class="btn btn-outline-warning"><i class="bi bi-pencil-square"></i></a>
+                  <button type="button" class="btn btn-outline-danger" (click)="deleteCompany(company.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+              </td>
+            </tr>
+            }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div>
+  @if (submitted) { 
+    @if (isSucess) {
+  <div class="alert alert-success" role="alert">
+    {{ message }}
+  </div>
+  } @else {
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  } }
+
+  <div class="submit-form">
+    <div class="form-group">
+      <label for="title">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="user.email"
+        name="title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Senha</label>
+      <input
+        class="form-control"
+        id="description"
+        required
+        [(ngModel)]="user.password"
+        name="description"
+      />
+    </div>
+
+    <div class="row">
+      <div class="col-10"></div>
+      @if (isUpdateRoute) {
+      <div class="col-1">
+        <button (click)="updateUser()" class="btn btn-info">Ataulizar</button>
+      </div>
+      } @else {
+      <div class="col-1">
+        <button (click)="saveUser(); newuser()" class="btn btn-success">
+          Salvar
+        </button>
+      </div>
+      }
+      <div class="col-1">
+        <a href="user" class="btn btn-light"> Voltar </a>
+      </div>
+    </div>
+  </div>
+</div>
