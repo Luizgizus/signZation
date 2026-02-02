@@ -22,8 +22,6 @@ class User(models.Model):
         blank=True,
         related_name='updated_users',
     )
-    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, null= True, related_name='related_companies')
-
     def save(self, *args, **kwargs):
         self.last_updated_at = timezone.now()
         if len(self.password) <= 5:

@@ -39,7 +39,6 @@ class UserAPITest(TestCase):
             "password": "123456",
             "email_verified": False,
             "last_password_redefinition_at": None,
-            "company": None,
         }
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
