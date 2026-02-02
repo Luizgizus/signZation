@@ -5,4 +5,5 @@ export interface Company {
   locale?: string;
   lang?: string;
   created_by?: number;
+  updated_by?: number | null;
 }

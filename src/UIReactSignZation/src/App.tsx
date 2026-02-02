@@ -8,6 +8,7 @@ import DocumentList from './pages/DocumentList';
 import DocumentForm from './pages/DocumentForm';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import ResetPassword from './pages/ResetPassword';
 import { clearSession } from './auth';
 import './App.css';
 
@@ -29,45 +30,54 @@ const AppShell = () => {
   return (
     <div className={`app-shell ${isCollapsed ? 'is-collapsed' : ''}`}>
       <aside className="sidebar">
-        <div className="sidebar-header">
-          <h1 className="brand">SignZation</h1>
-          <button
-            type="button"
-            className="sidebar-toggle"
-            onClick={() => setIsCollapsed((prev) => !prev)}
-            aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
-          >
-            <i className={`bi ${isCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'}`}></i>
-          </button>
+        <div className="sidebar-main">
+          <div className="sidebar-header">
+            <h1 className="brand">SignZation</h1>
+            <button
+              type="button"
+              className="sidebar-toggle"
+              onClick={() => setIsCollapsed((prev) => !prev)}
+              aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+            >
+              <i className={`bi ${isCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'}`}></i>
+            </button>
+          </div>
+
+          <div className="nav-section">
+            <span className="nav-label">Gestão</span>
+            <NavLink
+              to="/user"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              <i className="bi bi-person"></i>
+              <span className="nav-text">Usuarios</span>
+            </NavLink>
+            <NavLink
+              to="/company"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              <i className="bi bi-building"></i>
+              <span className="nav-text">Empresas</span>
+            </NavLink>
+            <NavLink
+              to="/document"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              <i className="bi bi-file-text"></i>
+              <span className="nav-text">Documentos</span>
+            </NavLink>
+          </div>
         </div>
 
-        <div className="nav-section">
-          <span className="nav-label">Gestão</span>
-          <NavLink
-            to="/user"
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-          >
-            <i className="bi bi-person"></i>
-            <span className="nav-text">Usuarios</span>
-          </NavLink>
-          <NavLink
-            to="/company"
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-          >
-            <i className="bi bi-building"></i>
-            <span className="nav-text">Empresas</span>
-          </NavLink>
-          <NavLink
-            to="/document"
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-          >
-            <i className="bi bi-file-text"></i>
-            <span className="nav-text">Documentos</span>
-          </NavLink>
-        </div>
-
-        <div className="nav-section">
+        <div className="nav-section sidebar-footer">
           <span className="nav-label">Conta</span>
+          <NavLink
+            to="/reset-password"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <i className="bi bi-key"></i>
+            <span className="nav-text">Resetar senha</span>
+          </NavLink>
           <button
             type="button"
             className="nav-link logout-button"
@@ -104,6 +114,7 @@ const AppShell = () => {
             <Route path="/document" element={<DocumentList />} />
             <Route path="/document-create" element={<DocumentForm />} />
             <Route path="/document-update/:id" element={<DocumentForm />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
           <Route path="/login" element={<Navigate to="/company" replace />} />
         </Routes>

@@ -8,6 +8,20 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='created_users',
+    )
+    updated_by = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='updated_users',
+    )
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, null= True, related_name='related_companies')
 
     def save(self, *args, **kwargs):

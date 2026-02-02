@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Company } from '../models/company';
 import { companyService } from '../services/companyService';
+import { formatDateTime } from '../utils/date';
 
 const CompanyList = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -82,9 +83,9 @@ const CompanyList = () => {
                   <tr key={company.id ?? index}>
                     <th scope="row">{index + 1}</th>
                     <td>{company.name}</td>
-                    <td>{company.lang}</td>
                     <td>{company.locale}</td>
-                    <td>{company.created_at as string}</td>
+                    <td>{company.lang}</td>
+                    <td>{formatDateTime(company.created_at)}</td>
                     <td className="actions-cell">
                       <div className="actions-buttons">
                         <Link to={`/company-update/${company.id}`} className="btn btn-outline-warning">

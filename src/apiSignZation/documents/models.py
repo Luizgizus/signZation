@@ -10,6 +10,13 @@ class Document(models.Model):
     signed = models.BooleanField(default=False)
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='doc_company')
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='doc_created_by')
+    updated_by = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='doc_updated_by',
+    )
 
     def save(self, *args, **kwargs):
         self.last_updated_at = timezone.now()

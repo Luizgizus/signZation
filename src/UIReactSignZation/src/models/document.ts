@@ -7,4 +7,5 @@ export interface Document {
   signed?: boolean;
   company?: number;
   created_by?: number;
+  updated_by?: number | null;
 }

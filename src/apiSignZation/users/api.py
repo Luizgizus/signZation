@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny
 from .models import User
 from .serializers import UserSerializer
 from .selectors import list_users, get_user_by_id, get_user_by_email
-from .services import create_user, update_user, delete_user
+from .services import create_user, update_user, delete_user, reset_user_password
 from .auth import create_session_token, SESSION_TTL_SECONDS
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class CreateUserAPIView(APIView):
     def post(self, request):
         try:
-            serializer = create_user(request.data)
+            serializer = create_user(request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -48,7 +48,7 @@ class ReadUpdateDeleteUserAPIView(APIView):
     def put(self, request, user_id):
         try:
             user = get_user_by_id(user_id)
-            serializer = update_user(user, request.data)
+            serializer = update_user(user, request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -93,3 +93,41 @@ class LoginAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class ResetPasswordAPIView(APIView):
+    def post(self, request):
+        user_id_raw = request.data.get("user_id") or request.user.id
+        old_password = request.data.get("old_password", "")
+        new_password = request.data.get("new_password", "")
+
+        if not old_password or not new_password:
+            return Response(
+                {"detail": "Senha antiga e senha nova são obrigatórias."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            user_id = int(user_id_raw)
+        except (TypeError, ValueError):
+            return Response({"detail": "Usuário inválido."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_id != request.user.id:
+            return Response({"detail": "Acesso não permitido."}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            user = get_user_by_id(user_id)
+        except User.DoesNotExist:
+            return Response({"detail": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            success, error_message = reset_user_password(user, old_password, new_password)
+            if not success:
+                return Response({"detail": error_message}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            logger.exception("Erro ao resetar senha.", extra={"user_id": user_id})
+            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"detail": "Senha atualizada com sucesso."}, status=status.HTTP_200_OK)

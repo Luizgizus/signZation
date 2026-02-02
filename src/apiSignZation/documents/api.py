@@ -24,7 +24,7 @@ class SignDocumentAPIView(APIView):
             return Response({"Message": "Documento já assinado"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            serializer = sign_document(document, request.data)
+            serializer = sign_document(document, request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -36,7 +36,7 @@ class SignDocumentAPIView(APIView):
 class CreateDocumentAPIView(APIView):
     def post(self, request):
         try:
-            serializer = create_document(request.data)
+            serializer = create_document(request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -71,7 +71,7 @@ class ReadUpdateDeleteDocumentAPIView(APIView):
             logger.warning("Documento não encontrado para atualização.", extra={"document_id": document_id})
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
-            serializer = update_document(document, request.data)
+            serializer = update_document(document, request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

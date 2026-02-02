@@ -19,4 +19,15 @@ export const authService = {
       body: JSON.stringify({ email, password }),
     });
   },
+  resetPassword: async (userId: number, oldPassword: string, newPassword: string): Promise<{ detail: string }> => {
+    return requestJson<{ detail: string }>(`${baseUrl}/reset-password/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: userId,
+        old_password: oldPassword,
+        new_password: newPassword,
+      }),
+    });
+  },
 };

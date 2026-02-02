@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { User } from '../models/user';
 import { userService } from '../services/userService';
+import { getCurrentUserId } from '../auth';
 
 const UserForm = () => {
   const { id } = useParams();
   const isUpdateRoute = useMemo(() => Boolean(id), [id]);
   const navigate = useNavigate();
+  const currentUserId = getCurrentUserId();
 
   const [user, setUser] = useState<User>({
     id: '',
@@ -41,6 +43,7 @@ const UserForm = () => {
     const data = {
       email: user.email,
       password: user.password,
+      created_by: currentUserId,
     };
 
     try {
@@ -62,6 +65,7 @@ const UserForm = () => {
     const data = {
       email: user.email,
       password: oldPassword,
+      updated_by: currentUserId,
     };
 
     try {

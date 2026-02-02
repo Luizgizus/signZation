@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await authService.login(email, password);
-      setSession(response.token, response.expires_in);
+      setSession(response.token, response.expires_in, response.user);
       navigate('/company', { replace: true });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erro ao autenticar.';

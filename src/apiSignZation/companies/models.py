@@ -13,6 +13,13 @@ class Company(models.Model):
     )
     lang = models.CharField(max_length=2, choices=lang_choices, default='pt')
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='created_by_companies')
+    updated_by = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='updated_by_companies',
+    )
 
     def save(self, *args, **kwargs):
         self.last_updated_at = timezone.now()

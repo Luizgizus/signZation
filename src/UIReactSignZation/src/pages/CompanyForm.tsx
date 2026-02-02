@@ -2,18 +2,21 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Company } from '../models/company';
 import { companyService } from '../services/companyService';
+import { getCurrentUserId } from '../auth';
 
 const CompanyForm = () => {
   const { id } = useParams();
   const isUpdateRoute = useMemo(() => Boolean(id), [id]);
   const navigate = useNavigate();
+  const currentUserId = getCurrentUserId() ?? 0;
 
   const [company, setCompany] = useState<Company>({
     id: '',
     name: '',
     lang: 'pt',
     locale: '-3',
-    created_by: 2,
+    created_by: currentUserId,
+    updated_by: null,
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -27,7 +30,8 @@ const CompanyForm = () => {
         name: data.name ?? '',
         lang: data.lang ?? 'pt',
         locale: data.locale ?? '-3',
-        created_by: data.created_by ?? 2,
+        created_by: data.created_by ?? currentUserId,
+        updated_by: data.updated_by ?? null,
       });
     } catch (error) {
       const err = error as Error;
@@ -48,7 +52,7 @@ const CompanyForm = () => {
       name: company.name,
       lang: company.lang,
       locale: company.locale,
-      created_by: 2,
+      created_by: currentUserId,
     };
 
     try {
@@ -71,7 +75,8 @@ const CompanyForm = () => {
       name: company.name,
       lang: company.lang,
       locale: company.locale,
-      created_by: 2,
+      created_by: company.created_by,
+      updated_by: currentUserId,
     };
 
     try {
@@ -92,7 +97,8 @@ const CompanyForm = () => {
       name: '',
       lang: 'pt',
       locale: '-3',
-      created_by: 2,
+      created_by: currentUserId,
+      updated_by: null,
     });
   };
 

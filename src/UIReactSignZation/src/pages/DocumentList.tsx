@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Document } from '../models/document';
 import { documentService } from '../services/documentService';
+import { getCurrentUserId } from '../auth';
+import { formatDateTime } from '../utils/date';
 
 const DocumentList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const location = useLocation();
   const flash = (location.state as { flash?: string } | undefined)?.flash;
+  const currentUserId = getCurrentUserId();
 
   const loadDocuments = async () => {
     try {
@@ -46,6 +49,7 @@ const DocumentList = () => {
     const data = {
       company,
       created_by: createdBy,
+      updated_by: currentUserId,
     };
 
     try {
@@ -100,9 +104,15 @@ const DocumentList = () => {
                   <tr key={doc.id ?? index}>
                     <th scope="row">{index + 1}</th>
                     <td>{doc.name}</td>
-                    <td>{String(doc.signed)}</td>
-                    <td>{doc.date_limit_to_sign}</td>
-                    <td>{doc.created_at as string}</td>
+                    <td>
+                      {doc.signed ? (
+                        <span className="badge bg-success">Assinado</span>
+                      ) : (
+                        <span className="badge bg-warning text-dark">Pendente</span>
+                      )}
+                    </td>
+                    <td>{formatDateTime(doc.date_limit_to_sign)}</td>
+                    <td>{formatDateTime(doc.created_at)}</td>
                     <td className="actions-cell">
                       <div className="actions-buttons">
                         <Link to={`/document-update/${doc.id}`} className="btn btn-outline-warning">

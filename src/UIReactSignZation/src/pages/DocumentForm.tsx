@@ -4,11 +4,13 @@ import { Company } from '../models/company';
 import { Document } from '../models/document';
 import { companyService } from '../services/companyService';
 import { documentService } from '../services/documentService';
+import { getCurrentUserId } from '../auth';
 
 const DocumentForm = () => {
   const { id } = useParams();
   const isUpdateRoute = useMemo(() => Boolean(id), [id]);
   const navigate = useNavigate();
+  const currentUserId = getCurrentUserId() ?? 0;
 
   const [document, setDocument] = useState<Document>({
     name: '',
@@ -17,7 +19,8 @@ const DocumentForm = () => {
     date_limit_to_sign: '',
     signed: false,
     company: 0,
-    created_by: 2,
+    created_by: currentUserId,
+    updated_by: null,
   });
 
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -44,7 +47,8 @@ const DocumentForm = () => {
           ? new Date(data.date_limit_to_sign).toISOString().slice(0, 16)
           : '',
         company: data.company ?? 0,
-        created_by: data.created_by ?? 2,
+        created_by: data.created_by ?? currentUserId,
+        updated_by: data.updated_by ?? null,
       }));
     } catch (error) {
       const err = error as Error;
@@ -69,7 +73,7 @@ const DocumentForm = () => {
       name: document.name,
       date_limit_to_sign: document.date_limit_to_sign,
       company: document.company,
-      created_by: document.created_by,
+      created_by: currentUserId,
     };
 
     try {
@@ -96,6 +100,7 @@ const DocumentForm = () => {
       signed: document.signed,
       company: document.company,
       created_by: document.created_by,
+      updated_by: currentUserId,
     };
 
     try {
@@ -116,7 +121,8 @@ const DocumentForm = () => {
       date_limit_to_sign: '',
       signed: false,
       company: 2,
-      created_by: 2,
+      created_by: currentUserId,
+      updated_by: null,
     });
   };
 

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class CreateCompanyAPIView(APIView):
     def post(self, request):
         try:
-            serializer = create_company(request.data)
+            serializer = create_company(request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -45,7 +45,7 @@ class ReadUpdateDeleteCompanyAPIView(APIView):
     def put(self, request, company_id):
         try:
             company = get_company_by_id(company_id)
-            serializer = update_company(company, request.data)
+            serializer = update_company(company, request.data, request.user.id)
             if serializer.is_valid():
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

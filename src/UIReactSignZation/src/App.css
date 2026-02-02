@@ -53,10 +53,20 @@ h5 {
   padding: 24px 18px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  justify-content: space-between;
   position: sticky;
   top: 0;
   height: 100vh;
+}
+
+.sidebar-main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
 }
 
 .sidebar-header {

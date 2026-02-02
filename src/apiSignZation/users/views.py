@@ -1,3 +1,3 @@
-from .api import CreateUserAPIView, ReadUpdateDeleteUserAPIView, LoginAPIView
+from .api import CreateUserAPIView, ReadUpdateDeleteUserAPIView, LoginAPIView, ResetPasswordAPIView
 
-__all__ = ["CreateUserAPIView", "ReadUpdateDeleteUserAPIView", "LoginAPIView"]
+__all__ = ["CreateUserAPIView", "ReadUpdateDeleteUserAPIView", "LoginAPIView", "ResetPasswordAPIView"]
