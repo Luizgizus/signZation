@@ -6,12 +6,12 @@ Sistema de gestão de **usuários, empresas e documentos**, com autenticação p
 
 O projeto é dividido em duas partes:
 
-- **Backend (`src/apiSignZation`)**: API em Django + DRF.
+- **Backend (`apiSignZation`)**: API em Django + DRF.
   - CRUD de usuários, empresas e documentos.
   - Login via rota `/users/login/`.
   - Sessão com token (expira em 3 horas).
   - Reset de senha via `/users/reset-password/`.
-- **Frontend (`src/UIReactSignZation`)**: React + Vite.
+- **Frontend (`UIReactSignZation`)**: React + Vite.
   - Tela de login.
   - Listagens e formulários (em drawer) de CRUD.
   - Rotas protegidas (se não estiver logado, redireciona para login).
@@ -60,7 +60,7 @@ docker compose down
 ### 1) Backend
 
 ```bash
-cd src/apiSignZation
+cd apiSignZation
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 # .venv\Scripts\activate   # Windows
@@ -77,7 +77,7 @@ Backend em: `http://localhost:8000`
 Em outro terminal:
 
 ```bash
-cd src/UIReactSignZation
+cd UIReactSignZation
 npm install
 npm run dev
 ```
@@ -88,7 +88,7 @@ Frontend em: `http://localhost:5173`
 
 ## Testes unitários (backend)
 
-Dentro de `src/apiSignZation`:
+Dentro de `apiSignZation`:
 
 ```bash
 python manage.py test
@@ -106,7 +106,7 @@ python manage.py test documents
 
 ## Criar superusuário (Django Admin)
 
-Dentro de `src/apiSignZation`:
+Dentro de `apiSignZation`:
 
 ```bash
 python manage.py createsuperuser
