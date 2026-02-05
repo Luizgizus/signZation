@@ -68,10 +68,23 @@ const DocumentForm = () => {
     }
   }, [id, isUpdateRoute]);
 
+  const formatDateLimitToApi = (value?: string) => {
+    if (!value) {
+      return value;
+    }
+    if (value.length >= 19) {
+      return value.slice(0, 19);
+    }
+    if (value.length === 16) {
+      return `${value}:00`;
+    }
+    return value;
+  };
+
   const saveDocument = async () => {
     const data = {
       name: document.name,
-      date_limit_to_sign: document.date_limit_to_sign,
+      date_limit_to_sign: formatDateLimitToApi(document.date_limit_to_sign),
       company: document.company,
       created_by: currentUserId,
     };
@@ -96,7 +109,7 @@ const DocumentForm = () => {
       name: document.name,
       created_at: document.created_at,
       last_updated_at: document.last_updated_at,
-      date_limit_to_sign: document.date_limit_to_sign,
+      date_limit_to_sign: formatDateLimitToApi(document.date_limit_to_sign),
       signed: document.signed,
       company: document.company,
       created_by: document.created_by,

@@ -3,23 +3,16 @@ from django.utils import timezone
 
 
 def create_user(data, actor_id):
-    payload = data.copy()
-    payload['created_by'] = actor_id
-    serializer = UserSerializer(data=payload)
-    if serializer.is_valid():
-        serializer.save()
+    serializer = UserSerializer(data=data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(created_by_id=actor_id)
     return serializer
 
 
 def update_user(user, data, actor_id):
-    payload = data.copy()
-    payload['updated_by'] = actor_id
-    if 'created_by' not in payload:
-        payload['created_by'] = user.created_by_id
-
-    serializer = UserSerializer(user, data=payload)
-    if serializer.is_valid():
-        serializer.save()
+    serializer = UserSerializer(user, data=data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(updated_by_id=actor_id)
     return serializer
 
 

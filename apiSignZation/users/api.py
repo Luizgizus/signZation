@@ -3,6 +3,7 @@ import logging
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 
 from .models import User
@@ -18,12 +19,14 @@ class CreateUserAPIView(APIView):
     def post(self, request):
         try:
             serializer = create_user(request.data, request.user.id)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as exc:
+            return Response(exc.detail, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             logger.exception("Erro ao criar usuário.")
-            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Houve um problema no servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
         try:
@@ -32,7 +35,7 @@ class CreateUserAPIView(APIView):
             return Response(serializer.data)
         except Exception:
             logger.exception("Erro ao listar usuários.")
-            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Houve um problema no servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ReadUpdateDeleteUserAPIView(APIView):
@@ -41,29 +44,40 @@ class ReadUpdateDeleteUserAPIView(APIView):
             user = get_user_by_id(user_id)
             serializer = UserSerializer(user)
             return Response(serializer.data)
+        except User.DoesNotExist:
+            logger.warning("Usuário não encontrado.", extra={"user_id": user_id})
+            return Response({"detail": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             logger.exception("Erro ao buscar usuário.", extra={"user_id": user_id})
-            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Houve um problema no servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, user_id):
         try:
             user = get_user_by_id(user_id)
             serializer = update_user(user, request.data, request.user.id)
-            if serializer.is_valid():
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            logger.warning("Usuário não encontrado para atualização.", extra={"user_id": user_id})
+            return Response({"detail": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        except ValidationError as exc:
+            return Response(exc.detail, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             logger.exception("Erro ao atualizar usuário.", extra={"user_id": user_id})
-            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Houve um problema no servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, user_id):
         try:
             user = get_user_by_id(user_id)
             delete_user(user)
             return Response(status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            logger.warning("Usuário não encontrado para exclusão.", extra={"user_id": user_id})
+            return Response({"detail": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             logger.exception("Erro ao deletar usuário.", extra={"user_id": user_id})
-            return Response("Houve um problema no servidor", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Houve um problema no servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LoginAPIView(APIView):

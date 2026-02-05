@@ -14,7 +14,7 @@ const CompanyForm = () => {
     id: '',
     name: '',
     lang: 'pt',
-    locale: '-3',
+    locale: '-03:00',
     created_by: currentUserId,
     updated_by: null,
   });
@@ -29,7 +29,7 @@ const CompanyForm = () => {
         id: data.id,
         name: data.name ?? '',
         lang: data.lang ?? 'pt',
-        locale: data.locale ?? '-3',
+        locale: data.locale ?? '-03:00',
         created_by: data.created_by ?? currentUserId,
         updated_by: data.updated_by ?? null,
       });
@@ -47,7 +47,23 @@ const CompanyForm = () => {
     }
   }, [id, isUpdateRoute]);
 
+  const localeRegex = /^[+-](?:0\d|1\d|2[0-3]):[0-5]\d$/;
+
+  const validateLocale = () => {
+    if (!company.locale || !localeRegex.test(company.locale)) {
+      setIsSuccess(false);
+      setMessage('Locale inválido. Use o formato ±HH:MM, por exemplo -03:00.');
+      setSubmitted(true);
+      return false;
+    }
+    return true;
+  };
+
   const saveCompany = async () => {
+    if (!validateLocale()) {
+      return;
+    }
+
     const data = {
       name: company.name,
       lang: company.lang,
@@ -68,6 +84,9 @@ const CompanyForm = () => {
 
   const updateCompany = async () => {
     if (!id) {
+      return;
+    }
+    if (!validateLocale()) {
       return;
     }
 
@@ -96,7 +115,7 @@ const CompanyForm = () => {
       id: '',
       name: '',
       lang: 'pt',
-      locale: '-3',
+      locale: '-03:00',
       created_by: currentUserId,
       updated_by: null,
     });
@@ -159,6 +178,9 @@ const CompanyForm = () => {
                 id="company-locale"
                 required
                 value={company.locale ?? ''}
+                pattern="^[+-](?:0\d|1\d|2[0-3]):[0-5]\d$"
+                title="Formato esperado: ±HH:MM (ex.: -03:00)"
+                placeholder="-03:00"
                 onChange={(event) => setCompany((prev) => ({ ...prev, locale: event.target.value }))}
               />
             </div>
