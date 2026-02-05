@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentUserId } from '../auth';
+import DrawerLayout from '../components/DrawerLayout';
 import { Company } from '../dtos/company';
 import { companyService } from '../services/companyService';
 
@@ -122,93 +123,80 @@ const CompanyForm = () => {
   };
 
   return (
-    <>
-      <div className="drawer-backdrop" />
-      <div className="drawer">
-        <div className="drawer-header">
-          <h2 className="drawer-title">{isUpdateRoute ? 'Atualizar empresa' : 'Nova empresa'}</h2>
-          <Link to="/company" className="btn btn-light">
-            Fechar
-          </Link>
+    <DrawerLayout
+      title={isUpdateRoute ? 'Atualizar empresa' : 'Nova empresa'}
+      closeTo="/company"
+      backTo="/company"
+      alert={{
+        visible: submitted,
+        isSuccess,
+        message,
+      }}
+      footerActions={
+        isUpdateRoute ? (
+          <button onClick={updateCompany} className="btn btn-info">
+            Ataulizar
+          </button>
+        ) : (
+          <button
+            onClick={async () => {
+              await saveCompany();
+              newCompany();
+            }}
+            className="btn btn-success"
+          >
+            Salvar
+          </button>
+        )
+      }
+    >
+      <div className="form-section">
+        <div>
+          <label htmlFor="company-name" className="form-label">
+            Nome*
+          </label>
+          <input
+            type="text"
+            className="input-field w-100"
+            id="company-name"
+            required
+            value={company.name ?? ''}
+            onChange={(event) => setCompany((prev) => ({ ...prev, name: event.target.value }))}
+          />
         </div>
 
-        <div className="drawer-body">
-          {submitted && (
-            <div className={`alert ${isSuccess ? 'alert-success' : 'alert-danger'}`} role="alert">
-              {message}
-            </div>
-          )}
-
-          <div className="form-section">
-            <div>
-              <label htmlFor="company-name" className="form-label">
-                Nome*
-              </label>
-              <input
-                type="text"
-                className="input-field w-100"
-                id="company-name"
-                required
-                value={company.name ?? ''}
-                onChange={(event) => setCompany((prev) => ({ ...prev, name: event.target.value }))}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="company-lang" className="form-label">
-                Lingua
-              </label>
-              <input
-                type="text"
-                className="input-field w-100"
-                id="company-lang"
-                required
-                value={company.lang ?? ''}
-                onChange={(event) => setCompany((prev) => ({ ...prev, lang: event.target.value }))}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="company-locale" className="form-label">
-                Time Zone
-              </label>
-              <input
-                type="text"
-                className="input-field w-100"
-                id="company-locale"
-                required
-                value={company.locale ?? ''}
-                pattern="^[+-](?:0\d|1\d|2[0-3]):[0-5]\d$"
-                title="Formato esperado: ±HH:MM (ex.: -03:00)"
-                placeholder="-03:00"
-                onChange={(event) => setCompany((prev) => ({ ...prev, locale: event.target.value }))}
-              />
-            </div>
-          </div>
+        <div>
+          <label htmlFor="company-lang" className="form-label">
+            Lingua
+          </label>
+          <input
+            type="text"
+            className="input-field w-100"
+            id="company-lang"
+            required
+            value={company.lang ?? ''}
+            onChange={(event) => setCompany((prev) => ({ ...prev, lang: event.target.value }))}
+          />
         </div>
 
-        <div className="drawer-footer">
-          <Link to="/company" className="btn btn-light">
-            Voltar
-          </Link>
-          {isUpdateRoute ? (
-            <button onClick={updateCompany} className="btn btn-info">
-              Ataulizar
-            </button>
-          ) : (
-            <button
-              onClick={async () => {
-                await saveCompany();
-                newCompany();
-              }}
-              className="btn btn-success"
-            >
-              Salvar
-            </button>
-          )}
+        <div>
+          <label htmlFor="company-locale" className="form-label">
+            Time Zone
+          </label>
+          <input
+            type="text"
+            className="input-field w-100"
+            id="company-locale"
+            required
+            value={company.locale ?? ''}
+            pattern="^[+-](?:0\\d|1\\d|2[0-3]):[0-5]\\d$"
+            title="Formato esperado: ±HH:MM (ex.: -03:00)"
+            placeholder="-03:00"
+            onChange={(event) => setCompany((prev) => ({ ...prev, locale: event.target.value }))}
+          />
         </div>
       </div>
-    </>
+    </DrawerLayout>
   );
 };
 

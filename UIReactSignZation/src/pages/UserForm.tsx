@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentUserId } from '../auth';
+import DrawerLayout from '../components/DrawerLayout';
 import { User } from '../dtos/user';
 import { userService } from '../services/userService';
 
@@ -89,76 +90,63 @@ const UserForm = () => {
   };
 
   return (
-    <>
-      <div className="drawer-backdrop" />
-      <div className="drawer">
-        <div className="drawer-header">
-          <h2 className="drawer-title">{isUpdateRoute ? 'Atualizar usuário' : 'Novo usuário'}</h2>
-          <Link to="/user" className="btn btn-light">
-            Fechar
-          </Link>
+    <DrawerLayout
+      title={isUpdateRoute ? 'Atualizar usuário' : 'Novo usuário'}
+      closeTo="/user"
+      backTo="/user"
+      alert={{
+        visible: submitted,
+        isSuccess,
+        message,
+      }}
+      footerActions={
+        isUpdateRoute ? (
+          <button onClick={updateUser} className="btn btn-info">
+            Ataulizar
+          </button>
+        ) : (
+          <button
+            onClick={async () => {
+              await saveUser();
+              newUser();
+            }}
+            className="btn btn-success"
+          >
+            Salvar
+          </button>
+        )
+      }
+    >
+      <div className="form-section">
+        <div>
+          <label htmlFor="user-email" className="form-label">
+            Email
+          </label>
+          <input
+            type="text"
+            className="input-field w-100"
+            id="user-email"
+            required
+            value={user.email ?? ''}
+            onChange={(event) => setUser((prev) => ({ ...prev, email: event.target.value }))}
+          />
         </div>
 
-        <div className="drawer-body">
-          {submitted && (
-            <div className={`alert ${isSuccess ? 'alert-success' : 'alert-danger'}`} role="alert">
-              {message}
-            </div>
-          )}
-
-          <div className="form-section">
-            <div>
-              <label htmlFor="user-email" className="form-label">
-                Email
-              </label>
-              <input
-                type="text"
-                className="input-field w-100"
-                id="user-email"
-                required
-                value={user.email ?? ''}
-                onChange={(event) => setUser((prev) => ({ ...prev, email: event.target.value }))}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="user-password" className="form-label">
-                Senha
-              </label>
-              <input
-                type="password"
-                className="input-field w-100"
-                id="user-password"
-                required
-                value={user.password ?? ''}
-                onChange={(event) => setUser((prev) => ({ ...prev, password: event.target.value }))}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="drawer-footer">
-          <Link to="/user" className="btn btn-light">
-            Voltar
-          </Link>
-          {isUpdateRoute ? (
-            <button onClick={updateUser} className="btn btn-info">
-              Ataulizar
-            </button>
-          ) : (
-            <button
-              onClick={async () => {
-                await saveUser();
-                newUser();
-              }}
-              className="btn btn-success"
-            >
-              Salvar
-            </button>
-          )}
+        <div>
+          <label htmlFor="user-password" className="form-label">
+            Senha
+          </label>
+          <input
+            type="password"
+            className="input-field w-100"
+            id="user-password"
+            required
+            value={user.password ?? ''}
+            onChange={(event) => setUser((prev) => ({ ...prev, password: event.target.value }))}
+          />
         </div>
       </div>
-    </>
+    </DrawerLayout>
   );
 };
 

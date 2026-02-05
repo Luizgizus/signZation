@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentUserId } from '../auth';
+import DrawerLayout from '../components/DrawerLayout';
 import { Company } from '../dtos/company';
 import { Document } from '../dtos/document';
 import { companyService } from '../services/companyService';
@@ -140,103 +141,90 @@ const DocumentForm = () => {
   };
 
   return (
-    <>
-      <div className="drawer-backdrop" />
-      <div className="drawer">
-        <div className="drawer-header">
-          <h2 className="drawer-title">{isUpdateRoute ? 'Atualizar documento' : 'Novo documento'}</h2>
-          <Link to="/document" className="btn btn-light">
-            Fechar
-          </Link>
+    <DrawerLayout
+      title={isUpdateRoute ? 'Atualizar documento' : 'Novo documento'}
+      closeTo="/document"
+      backTo="/document"
+      alert={{
+        visible: submitted,
+        isSuccess,
+        message,
+      }}
+      footerActions={
+        isUpdateRoute ? (
+          <button onClick={updateDocument} className="btn btn-info">
+            Ataulizar
+          </button>
+        ) : (
+          <button
+            onClick={async () => {
+              await saveDocument();
+              newDocument();
+            }}
+            className="btn btn-success"
+          >
+            Salvar
+          </button>
+        )
+      }
+    >
+      <div className="form-section">
+        <div>
+          <label htmlFor="document-name" className="form-label">
+            Nome*
+          </label>
+          <input
+            type="text"
+            className="input-field w-100"
+            id="document-name"
+            required
+            value={document.name ?? ''}
+            onChange={(event) => setDocument((prev) => ({ ...prev, name: event.target.value }))}
+          />
         </div>
 
-        <div className="drawer-body">
-          {submitted && (
-            <div className={`alert ${isSuccess ? 'alert-success' : 'alert-danger'}`} role="alert">
-              {message}
-            </div>
-          )}
-
-          <div className="form-section">
-            <div>
-              <label htmlFor="document-name" className="form-label">
-                Nome*
-              </label>
-              <input
-                type="text"
-                className="input-field w-100"
-                id="document-name"
-                required
-                value={document.name ?? ''}
-                onChange={(event) => setDocument((prev) => ({ ...prev, name: event.target.value }))}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="document-date-limit" className="form-label">
-                Data limite pra assinatura*
-              </label>
-              <input
-                type="datetime-local"
-                className="input-field w-100"
-                id="document-date-limit"
-                required
-                value={document.date_limit_to_sign ?? ''}
-                onChange={(event) =>
-                  setDocument((prev) => ({ ...prev, date_limit_to_sign: event.target.value }))
-                }
-              />
-            </div>
-
-            <div>
-              <label htmlFor="document-company" className="form-label">
-                Empresa desse documento
-              </label>
-              <select
-                value={document.company ?? 0}
-                onChange={(event) =>
-                  setDocument((prev) => ({
-                    ...prev,
-                    company: Number.parseInt(event.target.value, 10),
-                  }))
-                }
-                className="input-field w-100"
-                id="document-company"
-                aria-label="Empresa desse documento"
-              >
-                <option value={0}>Selecione uma empresa</option>
-                {companies.map((company) => (
-                  <option key={company.id} value={company.id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+        <div>
+          <label htmlFor="document-date-limit" className="form-label">
+            Data limite pra assinatura*
+          </label>
+          <input
+            type="datetime-local"
+            className="input-field w-100"
+            id="document-date-limit"
+            required
+            value={document.date_limit_to_sign ?? ''}
+            onChange={(event) =>
+              setDocument((prev) => ({ ...prev, date_limit_to_sign: event.target.value }))
+            }
+          />
         </div>
 
-        <div className="drawer-footer">
-          <Link to="/document" className="btn btn-light">
-            Voltar
-          </Link>
-          {isUpdateRoute ? (
-            <button onClick={updateDocument} className="btn btn-info">
-              Ataulizar
-            </button>
-          ) : (
-            <button
-              onClick={async () => {
-                await saveDocument();
-                newDocument();
-              }}
-              className="btn btn-success"
-            >
-              Salvar
-            </button>
-          )}
+        <div>
+          <label htmlFor="document-company" className="form-label">
+            Empresa desse documento
+          </label>
+          <select
+            value={document.company ?? 0}
+            onChange={(event) =>
+              setDocument((prev) => ({
+                ...prev,
+                company: Number.parseInt(event.target.value, 10),
+              }))
+            }
+            className="input-field w-100"
+            id="document-company"
+            aria-label="Empresa desse documento"
+          >
+            <option value={0}>Selecione uma empresa</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
-    </>
+    </DrawerLayout>
   );
 };
 
