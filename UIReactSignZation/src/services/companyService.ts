@@ -1,6 +1,6 @@
-import { Company } from '../models/company';
-import { requestJson, requestVoid } from './http';
 import { API_BASE_URL } from '../config/api';
+import { Company } from '../dtos/company';
+import { requestJson, requestVoid } from './http';
 
 const baseUrl = `${API_BASE_URL}/companies`;
 

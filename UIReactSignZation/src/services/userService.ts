@@ -1,6 +1,6 @@
-import { User } from '../models/user';
-import { requestJson, requestVoid } from './http';
 import { API_BASE_URL } from '../config/api';
+import { User } from '../dtos/user';
+import { requestJson, requestVoid } from './http';
 
 const baseUrl = `${API_BASE_URL}/users`;
 

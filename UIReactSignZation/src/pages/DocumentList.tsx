@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Document } from '../models/document';
-import { documentService } from '../services/documentService';
+import { useLocation } from 'react-router-dom';
 import { getCurrentUserId } from '../auth';
+import DataTable, { DataTableColumn } from '../components/DataTable';
+import { Document } from '../dtos/document';
+import { documentService } from '../services/documentService';
 import { formatDateTime } from '../utils/date';
 
 const DocumentList = () => {
@@ -60,6 +61,30 @@ const DocumentList = () => {
     }
   };
 
+  const columns: DataTableColumn<Document>[] = [
+    {
+      header: 'Nome',
+      render: (doc) => doc.name,
+    },
+    {
+      header: 'Assinado',
+      render: (doc) =>
+        doc.signed ? (
+          <span className="badge bg-success">Assinado</span>
+        ) : (
+          <span className="badge bg-warning text-dark">Pendente</span>
+        ),
+    },
+    {
+      header: 'Data limite de assinatura',
+      render: (doc) => formatDateTime(doc.date_limit_to_sign),
+    },
+    {
+      header: 'Data criação',
+      render: (doc) => formatDateTime(doc.created_at),
+    },
+  ];
+
   return (
     <div className="container-fluid">
       {flash && (
@@ -67,88 +92,35 @@ const DocumentList = () => {
           {flash}
         </div>
       )}
-      <div className="row align-items-center">
-        <div className="col">
-          <h1 className="display-1">Documentos</h1>
-        </div>
-        <div className="col-auto ms-auto">
-          <Link to="/document-create" className="btn btn-outline-success">
-            <i className="bi bi-plus-lg"></i>
-          </Link>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          {documents.length === 0 ? (
-            <div className="empty-state">
-              <i className="bi bi-file-earmark-text"></i>
-              <h3>Nenhum documento cadastrado</h3>
-              <p>Crie o primeiro documento para começar.</p>
-            </div>
+      <DataTable
+        title="Documentos"
+        data={documents}
+        columns={columns}
+        createTo="/document-create"
+        emptyState={{
+          iconClass: 'bi bi-file-earmark-text',
+          title: 'Nenhum documento cadastrado',
+          description: 'Crie o primeiro documento para começar.',
+        }}
+        getEditTo={(doc) => `/document-update/${doc.id}`}
+        onDelete={(doc) => deleteDocument(doc.id)}
+        getRowKey={(doc) => doc.id}
+        actions={(doc) =>
+          doc.signed ? (
+            <button disabled={true} className="btn btn-outline-gray">
+              <i className="bi bi-pencil"></i>
+            </button>
           ) : (
-            <table className="table table-modern">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Assinado</th>
-                  <th scope="col">Data limite de assinatura</th>
-                  <th scope="col">Data criação</th>
-                  <th scope="col" className="actions-col">
-                    Ações
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {documents.map((doc, index) => (
-                  <tr key={doc.id ?? index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{doc.name}</td>
-                    <td>
-                      {doc.signed ? (
-                        <span className="badge bg-success">Assinado</span>
-                      ) : (
-                        <span className="badge bg-warning text-dark">Pendente</span>
-                      )}
-                    </td>
-                    <td>{formatDateTime(doc.date_limit_to_sign)}</td>
-                    <td>{formatDateTime(doc.created_at)}</td>
-                    <td className="actions-cell">
-                      <div className="actions-buttons">
-                        <Link to={`/document-update/${doc.id}`} className="btn btn-outline-warning">
-                          <i className="bi bi-pencil-square"></i>
-                        </Link>
-
-                        <button
-                          type="button"
-                          className="btn btn-outline-danger"
-                          onClick={() => deleteDocument(doc.id)}
-                        >
-                          <i className="bi bi-trash3-fill"></i>
-                        </button>
-
-                        {doc.signed ? (
-                          <button disabled={true} className="btn btn-outline-gray">
-                            <i className="bi bi-pencil"></i>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-outline-info"
-                            onClick={() => signDocument(doc.id, doc.company, doc.created_by)}
-                          >
-                            <i className="bi bi-pencil"></i>
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
+            <button
+              type="button"
+              className="btn btn-outline-info"
+              onClick={() => signDocument(doc.id, doc.company, doc.created_by)}
+            >
+              <i className="bi bi-pencil"></i>
+            </button>
+          )
+        }
+      />
     </div>
   );
 };

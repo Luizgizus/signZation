@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Company } from '../models/company';
-import { Document } from '../models/document';
+import { getCurrentUserId } from '../auth';
+import { Company } from '../dtos/company';
+import { Document } from '../dtos/document';
 import { companyService } from '../services/companyService';
 import { documentService } from '../services/documentService';
-import { getCurrentUserId } from '../auth';
 
 const DocumentForm = () => {
   const { id } = useParams();

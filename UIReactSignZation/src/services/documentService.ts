@@ -1,6 +1,6 @@
-import { Document } from '../models/document';
-import { requestJson, requestVoid } from './http';
 import { API_BASE_URL } from '../config/api';
+import { Document } from '../dtos/document';
+import { requestJson, requestVoid } from './http';
 
 const baseUrl = `${API_BASE_URL}/documents`;
 

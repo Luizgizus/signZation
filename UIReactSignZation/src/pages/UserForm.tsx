@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { User } from '../models/user';
-import { userService } from '../services/userService';
 import { getCurrentUserId } from '../auth';
+import { User } from '../dtos/user';
+import { userService } from '../services/userService';
 
 const UserForm = () => {
   const { id } = useParams();
