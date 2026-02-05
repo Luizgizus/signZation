@@ -4,6 +4,7 @@ from django.utils import timezone
 class Document(models.Model):
     name = models.CharField(max_length=255)
     deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
     date_limit_to_sign = models.DateTimeField(null=True, blank=True)

@@ -6,6 +6,8 @@ class User(models.Model):
     last_password_redefinition_at = models.DateTimeField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(

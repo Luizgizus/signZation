@@ -70,7 +70,7 @@ class ReadUpdateDeleteUserAPIView(APIView):
     def delete(self, request, user_id):
         try:
             user = get_user_by_id(user_id)
-            delete_user(user)
+            delete_user(user, request.user.id)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             logger.warning("Usuário não encontrado para exclusão.", extra={"user_id": user_id})

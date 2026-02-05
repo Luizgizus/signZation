@@ -87,7 +87,7 @@ class ReadUpdateDeleteDocumentAPIView(APIView):
             logger.warning("Documento não encontrado para exclusão.", extra={"document_id": document_id})
             return Response({"detail": "Documento não encontrado."}, status=status.HTTP_404_NOT_FOUND)
         try:
-            delete_document(document)
+            delete_document(document, request.user.id)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception:
             logger.exception("Erro ao deletar documento.", extra={"document_id": document_id})

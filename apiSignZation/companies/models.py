@@ -3,6 +3,8 @@ from django.utils import timezone
 
 class Company(models.Model):
     name = models.CharField(max_length=255)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
     locale = models.CharField(max_length=50, default="-03:00")

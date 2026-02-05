@@ -64,7 +64,7 @@ class ReadUpdateDeleteCompanyAPIView(APIView):
     def delete(self, request, company_id):
         try:
             company = get_company_by_id(company_id)
-            delete_company(company)
+            delete_company(company, request.user.id)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Company.DoesNotExist:
             logger.warning("Empresa não encontrada para exclusão.", extra={"company_id": company_id})

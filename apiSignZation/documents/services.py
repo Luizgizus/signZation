@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from .serializers import DocumentSerializer
 
 
@@ -15,8 +17,12 @@ def update_document(document, data, actor_id):
     return serializer
 
 
-def delete_document(document):
-    document.delete()
+def delete_document(document, actor_id=None):
+    document.deleted = True
+    document.deleted_at = timezone.now()
+    if actor_id is not None:
+        document.updated_by_id = actor_id
+    document.save()
 
 
 def sign_document(document, data, actor_id):

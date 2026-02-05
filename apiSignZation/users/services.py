@@ -16,8 +16,12 @@ def update_user(user, data, actor_id):
     return serializer
 
 
-def delete_user(user):
-    user.delete()
+def delete_user(user, actor_id=None):
+    user.deleted = True
+    user.deleted_at = timezone.now()
+    if actor_id is not None:
+        user.updated_by_id = actor_id
+    user.save()
 
 
 def reset_user_password(user, old_password, new_password):
