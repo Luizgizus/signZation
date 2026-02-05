@@ -1,7 +1,8 @@
 import { Company } from '../models/company';
 import { requestJson, requestVoid } from './http';
+import { API_BASE_URL } from '../config/api';
 
-const baseUrl = 'http://localhost:8000/companies';
+const baseUrl = `${API_BASE_URL}/companies`;
 
 export const companyService = {
   getAll: async (): Promise<Company[]> => {

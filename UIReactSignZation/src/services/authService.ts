@@ -1,6 +1,7 @@
 import { requestJson } from './http';
+import { API_BASE_URL } from '../config/api';
 
-const baseUrl = 'http://localhost:8000/users';
+const baseUrl = `${API_BASE_URL}/users`;
 
 export type LoginResponse = {
   token: string;

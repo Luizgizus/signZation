@@ -1,7 +1,8 @@
 import { Document } from '../models/document';
 import { requestJson, requestVoid } from './http';
+import { API_BASE_URL } from '../config/api';
 
-const baseUrl = 'http://localhost:8000/documents';
+const baseUrl = `${API_BASE_URL}/documents`;
 
 export const documentService = {
   getAll: async (): Promise<Document[]> => {
